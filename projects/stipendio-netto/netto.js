@@ -25,6 +25,25 @@ function irpefLorda(imponibile, brackets) {
 }
 
 function detrazioneLavoroDip(imponibile, d) {
+  // Art.13 co.1 TUIR (DLgs 216/2023, strutturale L.207/2024): 4 fasce su reddito
+  // complessivo stimato (= RAL - INPS, mono-reddito, 365gg). Retrocompat: se il
+  // JSON ha ancora forma legacy {max,phase_out_start,phase_out_end} usa lineare.
+  if (d && d.fascia_15_28) {
+    const r = Math.max(0, Number(imponibile) || 0);
+    if (r <= 15000) return d.fino_15k;
+    if (r <= 28000) {
+      const f = d.fascia_15_28;
+      return Math.round(f.base + f.extra * (f.high - r) / (f.high - f.low));
+    }
+    if (r < 50000) {
+      const f = d.fascia_28_50;
+      let out = Math.round(f.base * (f.high - r) / (f.high - f.low));
+      const b = d.bonus_65;
+      if (b && r >= b.low && r <= b.high) out += b.importo;
+      return out;
+    }
+    return 0;
+  }
   if (imponibile <= d.phase_out_start) return d.max;
   if (imponibile >= d.phase_out_end) return 0;
   return Math.round(d.max * (d.phase_out_end - imponibile) / (d.phase_out_end - d.phase_out_start));

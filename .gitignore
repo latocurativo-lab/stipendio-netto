@@ -192,6 +192,11 @@ docs/*/*
 !docs/fullstack/cycle6-tracking.md
 !docs/qa/cycle6-verify.md
 !docs/devops/cycle6-deploy.md
+!docs/research/cycle7-art13-sources.md
+!docs/fullstack/cycle7-art13fix.md
+!docs/qa/cycle7-verify.md
+!docs/operations/cycle7-forfettario-kickoff.md
+!docs/devops/cycle7-deploy.md
 # Ignore all memories (keep folder marker only)
 memories/*
 !memories/.gitkeep

@@ -132,10 +132,10 @@ footer code{font-family:var(--mono);background:var(--carta2);padding:1px 6px;bor
       <h1>Quanto ti resta <span class="sbarra">in busta</span>, davvero?</h1>
       <p class="sub">Inserisci la RAL, scegli mensilità e regione: vedi netto al mese, INPS, IRPEF per scaglioni e addizionali — con il dettaglio riga per riga, come in busta paga.</p>
       <div class="chips" aria-label="scenari rapidi">
-        <button class="chip" onclick="document.getElementById('ral').value=25000;document.getElementById('ral').dispatchEvent(new Event('input'))">25k → €1.370</button>
-        <button class="chip" onclick="document.getElementById('ral').value=30000;document.getElementById('ral').dispatchEvent(new Event('input'))">30k → €1.579</button>
-        <button class="chip" onclick="document.getElementById('ral').value=35000;document.getElementById('ral').dispatchEvent(new Event('input'))">35k → €1.803</button>
-        <button class="chip" onclick="document.getElementById('ral').value=50000;document.getElementById('ral').dispatchEvent(new Event('input'))">50k → €2.483</button>
+        <button class="chip" onclick="document.getElementById('ral').value=25000;document.getElementById('ral').dispatchEvent(new Event('input'))">25k → €1.493</button>
+        <button class="chip" onclick="document.getElementById('ral').value=30000;document.getElementById('ral').dispatchEvent(new Event('input'))">30k → €1.722</button>
+        <button class="chip" onclick="document.getElementById('ral').value=35000;document.getElementById('ral').dispatchEvent(new Event('input'))">35k → €1.929</button>
+        <button class="chip" onclick="document.getElementById('ral').value=50000;document.getElementById('ral').dispatchEvent(new Event('input'))">50k → €2.514</button>
       </div>
       <div class="grid3" style="grid-template-columns:1fr 1fr;margin-top:22px">
         <div class="card"><div class="n">01 / 30 secondi</div><h3>Niente login</h3><p>Un numero, tre scelte. Il calcolo è istantaneo e resta nel tuo browser.</p></div>
@@ -178,7 +178,7 @@ footer code{font-family:var(--mono);background:var(--carta2);padding:1px 6px;bor
   </div>
 
   <div class="grid3">
-    <div class="card"><div class="n">IRPEF 23/33/43</div><h3>Scaglioni 2026</h3><p>23% fino a 28.000€ di imponibile, 33% fino a 50.000€, 43% oltre. Detrazione lavoro dipendente fino a 1.955€ in fase transitoria.</p></div>
+    <div class="card"><div class="n">IRPEF 23/33/43</div><h3>Scaglioni 2026</h3><p>23% fino a 28.000€ di imponibile, 33% fino a 50.000€, 43% oltre. Detrazione art.13: 1.955€ fino a 15k, formula 15-28k (fino a ~3.100€), decalage 28-50k, +65€ tra 25-35k.</p></div>
     <div class="card"><div class="n">INPS 9,19%</div><h3>Contributi IVS</h3><p>Trattenuta 9,19% entro il massimale (55.000€ in bozza). Sopra il massimale, aliquota solo oltre soglia: verifica circolare INPS.</p></div>
     <div class="card"><div class="n">+ ADDIZIONALI</div><h3>Regione + Comune</h3><p>Media 1,5% + 0,5% sull'imponibile. La tua regione sposta ±80€/anno: selezionala nel calcolatore.</p></div>
   </div>
@@ -211,7 +211,7 @@ footer code{font-family:var(--mono);background:var(--carta2);padding:1px 6px;bor
     <details><summary>I miei dati dove vanno?</summary><p>Da nessuna parte: calcolo 100% nel browser, nessun account, nessun invio. Misuriamo solo conteggi anonimi (Plausible) per capire se il tool serve davvero.</p></details>
   </div>
 
-  <p class="metodo"><b>Metodo (verificabile):</b> imponibile = RAL − min(RAL, 55.000) × 9,19%. IRPEF lorda per scaglioni 28k/50k. Detrazione 1.955€ piena fino a 15k di imponibile, azzerata a 28k (lineare). Addizionali sull'imponibile. Netto annuo ÷ mensilità. Parametri in <code>tax-2026.json</code> — se un'aliquota cambia, cambia solo quel file e la versione nel banner.</p>
+  <p class="metodo"><b>Metodo (verificabile):</b> imponibile = RAL − min(RAL, 55.000) × 9,19%. IRPEF lorda per scaglioni 28k/50k. Detrazione art.13 TUIR: 1.955€ fino a 15k; 15-28k: 1.910 + 1.190 × (28.000 − reddito)/13.000; 28-50k: 1.910 × (50.000 − reddito)/22.000 (+65€ tra 25-35k); zero oltre 50k. Reddito = imponibile stimato (mono-reddito, 365gg). Addizionali sull'imponibile. Netto annuo ÷ mensilità. Parametri in <code>tax-2026.json</code> — se un'aliquota cambia, cambia solo quel file e la versione nel banner.</p>
 
   <footer>
     <div>© 2026 Stipendio Netto · Stima a scopo informativo, non è consulenza fiscale né parere professionale. Fonti: Agenzia delle Entrate, INPS, L.199/2025 (bozza). Versione parametri: <code id="taxmeta2">…</code></div>
