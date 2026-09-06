@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stipendio Netto 2026 — da RAL a netto/mese in 30 secondi (Stima)</title>
+<meta name="description" content="Calcola lo stipendio netto 2026 dalla RAL: netto al mese con 13 mensilità, IRPEF 23/33/43%, INPS 9,19%, addizionali regionali e comunali. Stima gratuita, PDF scenari 13ª a 9€.">
+<link rel="canonical" href="https://stipendio-netto.pages.dev/">
+<meta property="og:title" content="Stipendio Netto 2026 — RAL → netto/mese in 30s">
+<meta property="og:description" content="Stima gratuita: IRPEF 23/33/43% + INPS + addizionali. Dettaglio trasparente, PDF 1 pagina a 9€.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#FAF6EE">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=IBM+Plex+Mono:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- Plausible: set window.PLAUSIBLE_DOMAIN before deploy; loader injected by netto.js only when configured (no TBD pings). -->
+<script>window.PLAUSIBLE_DOMAIN="";</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Come si calcola lo stipendio netto 2026 dalla RAL?","acceptedAnswer":{"@type":"Text","text":"RAL meno contributi INPS 9,19% (nel massimale), poi IRPEF a scaglioni 23% fino a 28.000€, 33% fino a 50.000€, 43% oltre, meno detrazione lavoro dipendente art.13 TUIR, meno addizionali regionale e comunale, diviso per le mensilità. Questa pagina applica la sequenza su aliquote bozza L.199/2025: è una stima."}},
+{"@type":"Question","name":"Quanto è affidabile il calcolo? È una busta paga ufficiale?","acceptedAnswer":{"@type":"Text","text":"No: è una stima su aliquote bozza 2026. La busta reale dipende da CCNL, cuneo applicato dal datore, detrazioni familiari, addizionale comunale con esenzioni e conguagli. Verifica con busta paga e commercialista. Versione aliquote: tax-2026.json."}},
+{"@type":"Question","name":"13ª e 14ª: come cambia il netto mensile?","acceptedAnswer":{"@type":"Text","text":"Il netto annuo stimato non cambia: cambia il divisore. Con 14 mensilità ogni mensilità è più bassa ma hai due rate extra. Usa il selettore 12/13/14 nel calcolatore."}},
+{"@type":"Question","name":"L'addizionale regionale cambia il risultato?","acceptedAnswer":{"@type":"Text","text":"Sì, 0,2-0,3 punti di differenza regionale spostano il netto di 30-80€/anno su 30k RAL. Il selettore regione applica una stima da aliquote 2024-25: verifica la delibera 2026 della tua regione."}},
+{"@type":"Question","name":"Cos'è il PDF scenari da 9€?","acceptedAnswer":{"@type":"Text","text":"Una pagina con tre scenari (RAL −2k, base, +2k), dettaglio IRPEF/INPS/addizionali e checklist da portare al colloquio o al commercialista. Pagamento con Stripe, fattura IT."}},
+{"@type":"Question","name":"I miei dati restano privati?","acceptedAnswer":{"@type":"Text","text":"Sì: il calcolo avviene nel tuo browser, nessun invio a server, nessun login. Solo conteggi anonimi di uso pagina (Plausible)."}}]}
+</script>
+<style>
+:root{
+  --carta:#FAF6EE; --carta2:#F3EDDF; --ink:#191713; --ink2:#5B554A;
+  --verde:#0E6B3A; --rosso:#C22E1F; --oro:#B98A1D; --linea:#E2D9C4;
+  --mono:'IBM Plex Mono',ui-monospace,monospace; --serif:'Fraunces',Georgia,serif; --sans:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--carta);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(#00000008 1px,transparent 1px);background-size:22px 22px}
+a{color:inherit}
+.banner{background:var(--ink);color:#F5EFE0;font-size:12.5px;text-align:center;padding:9px 12px;letter-spacing:.01em}
+.banner b{color:#FFD97A}
+.top{max-width:1080px;margin:0 auto;padding:18px 20px;display:flex;align-items:center;gap:14px}
+.timbro{font-family:var(--mono);font-weight:700;font-size:13px;border:2px solid var(--ink);border-radius:8px;padding:6px 10px;transform:rotate(-3deg);background:#fff;box-shadow:2px 2px 0 var(--ink)}
+.top nav{margin-left:auto;display:flex;gap:16px;font-size:14px;color:var(--ink2)}
+.top nav a{text-decoration:none}.top nav a:hover{color:var(--ink)}
+.btn{display:inline-block;border:2px solid var(--ink);border-radius:999px;padding:10px 20px;font-weight:600;font-size:15px;text-decoration:none;background:var(--verde);color:#fff;box-shadow:3px 3px 0 var(--ink);cursor:pointer;transition:transform .12s}
+.btn:hover{transform:translate(-1px,-1px)}.btn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
+.btn.ghost{background:#fff;color:var(--ink)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px 60px}
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:28px;margin-top:8px}
+@media(max-width:900px){.hero{grid-template-columns:1fr}}
+.kicker{font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--verde)}
+h1{font-family:var(--serif);font-weight:900;font-size:clamp(38px,5.4vw,62px);line-height:1.02;margin:10px 0 12px;letter-spacing:-.01em}
+h1 .sbarra{background:linear-gradient(transparent 62%,#FFE08A 62%);padding:0 4px}
+.sub{font-size:17px;color:var(--ink2);max-width:46ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}
+.chip{font-family:var(--mono);font-size:13px;border:1.5px solid var(--ink);background:#fff;border-radius:999px;padding:7px 13px;cursor:pointer}
+.chip:hover{background:#FFE9A8}
+.busta{background:#FFFDF7;border:2px solid var(--ink);border-radius:14px;box-shadow:6px 6px 0 var(--ink);overflow:hidden}
+.busta-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:2px dashed var(--linea);font-family:var(--mono);font-size:12px;color:var(--ink2)}
+.busta-head .ok{color:var(--verde);font-weight:700}
+.busta-body{padding:20px 18px}
+.field{margin-bottom:16px}
+.field label{font-size:13px;font-weight:600;letter-spacing:.02em;display:block;margin-bottom:7px}
+.riga-in{display:flex;gap:10px;align-items:center}
+input[type=number],select{font-family:var(--mono);font-size:22px;padding:12px 14px;border:2px solid var(--ink);border-radius:10px;width:100%;background:#fff;color:var(--ink)}
+select{font-size:15px}
+input[type=range]{width:100%;accent-color:var(--verde)}
+.seg{display:flex;border:2px solid var(--ink);border-radius:10px;overflow:hidden}
+.seg button{flex:1;font-family:var(--mono);font-size:16px;font-weight:700;padding:11px 0;border:0;background:#fff;cursor:pointer;color:var(--ink2)}
+.seg button.on{background:var(--ink);color:#FFE9A8}
+.ticket{margin-top:18px;background:var(--ink);color:#F5EFE0;border-radius:12px;padding:22px 20px;position:relative}
+.ticket:before,.ticket:after{content:"";position:absolute;top:50%;width:22px;height:22px;background:var(--carta);border:2px solid var(--ink);border-radius:50%;transform:translateY(-50%)}
+.ticket:before{left:-13px}.ticket:after{right:-13px}
+.mese-label{font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:#CBBF9F}
+#mese{font-family:var(--mono);font-weight:700;font-size:clamp(44px,5.6vw,58px);line-height:1;margin:4px 0}
+.ticket .sub2{font-size:14px;color:#CBBF9F}
+#barra{display:flex;height:14px;border-radius:99px;overflow:hidden;margin:16px 0 10px;border:1px solid #ffffff33}
+.b-netto{background:#7BD88F}.b-irpef{background:#E4572E}.b-inps{background:#3E92CC}.b-add{background:#E8C547}
+#legenda{display:flex;flex-wrap:wrap;gap:10px 16px;font-size:12.5px;font-family:var(--mono)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px}
+#righe{margin-top:14px;border-top:1px dashed #ffffff33}
+.riga{display:flex;justify-content:space-between;padding:7px 0;font-size:14px;border-bottom:1px dashed #ffffff22}
+.riga strong{font-family:var(--mono)}
+.ticket-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.btn.carta{background:#FFE9A8;color:var(--ink)}
+.linkbtn{background:none;border:0;color:#FFE9A8;font-size:13.5px;cursor:pointer;text-decoration:underline;font-family:var(--sans)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:34px}
+@media(max-width:800px){.grid3{grid-template-columns:1fr}}
+.card{background:#FFFDF7;border:2px solid var(--ink);border-radius:12px;padding:18px;box-shadow:4px 4px 0 var(--ink)}
+.card h3{font-family:var(--serif);margin:0 0 8px;font-size:20px}
+.card p{font-size:14.5px;color:var(--ink2);margin:0}
+.card .n{font-family:var(--mono);font-size:12px;color:var(--rosso);font-weight:700}
+.cta{margin-top:30px;border:2px solid var(--ink);border-radius:14px;background:#FFFDF7;box-shadow:6px 6px 0 var(--rosso);display:grid;grid-template-columns:1.2fr .8fr;overflow:hidden}
+@media(max-width:800px){.cta{grid-template-columns:1fr}}
+.cta-l{padding:26px}
+.cta-l h2{font-family:var(--serif);font-size:30px;margin:0 0 10px}
+.cta ul{margin:12px 0;padding:0;list-style:none;font-size:15px}
+.cta li{padding:5px 0}.cta li:before{content:"✓ ";color:var(--verde);font-weight:700}
+.prezzo{font-family:var(--mono);font-size:15px;margin-top:12px}
+.prezzo s{color:var(--ink2)}.prezzo b{font-size:26px}
+.cta-r{background:var(--rosso);color:#fff;padding:26px;display:flex;flex-direction:column;justify-content:center;gap:12px}
+.cta-r .btn{background:#fff;color:var(--ink)}
+.faq{margin-top:34px}
+.faq details{background:#FFFDF7;border:2px solid var(--ink);border-radius:10px;padding:14px 16px;margin-bottom:10px}
+.faq summary{font-weight:600;cursor:pointer;font-size:15.5px}
+.faq p{font-size:14.5px;color:var(--ink2)}
+.metodo{margin-top:26px;font-size:14px;color:var(--ink2);border-left:4px solid var(--oro);padding-left:14px;max-width:70ch}
+footer{margin-top:40px;border-top:2px solid var(--ink);padding:20px 0 40px;font-size:12.5px;color:var(--ink2)}
+footer code{font-family:var(--mono);background:var(--carta2);padding:1px 6px;border-radius:6px}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(25,23,19,.55);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
+.modal.open{display:flex}
+.sheet{background:#FFFDF7;border:2px solid var(--ink);border-radius:14px;max-width:440px;width:100%;padding:26px;box-shadow:8px 8px 0 var(--ink)}
+.sheet h3{font-family:var(--serif);font-size:26px;margin:0 0 6px}
+.sheet .pr{font-family:var(--mono);font-size:40px;font-weight:700;margin:8px 0}
+.sheet .btn{width:100%;text-align:center}
+.mini{font-size:12.5px;color:var(--ink2);text-align:center;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="banner">⚠️ <b>STIMA</b> su aliquote bozza Legge Bilancio 2026 · <span id="taxmeta">…</span> · Non è consulenza fiscale. Fonti: AdE / INPS.</div>
+
+<header class="top">
+  <div class="timbro">SN·26 ✕ BUSTA</div>
+  <nav><a href="#calcolatore">Calcolatore</a><a href="#pdf">PDF 9€</a><a href="#faq">FAQ</a></nav>
+</header>
+
+<div class="wrap">
+  <div class="hero" id="calcolatore">
+    <div>
+      <div class="kicker">RAL → netto · edizione 2026 · gratis</div>
+      <h1>Quanto ti resta <span class="sbarra">in busta</span>, davvero?</h1>
+      <p class="sub">Inserisci la RAL, scegli mensilità e regione: vedi netto al mese, INPS, IRPEF per scaglioni e addizionali — con il dettaglio riga per riga, come in busta paga.</p>
+      <div class="chips" aria-label="scenari rapidi">
+        <button class="chip" onclick="document.getElementById('ral').value=25000;document.getElementById('ral').dispatchEvent(new Event('input'))">25k → €1.370</button>
+        <button class="chip" onclick="document.getElementById('ral').value=30000;document.getElementById('ral').dispatchEvent(new Event('input'))">30k → €1.579</button>
+        <button class="chip" onclick="document.getElementById('ral').value=35000;document.getElementById('ral').dispatchEvent(new Event('input'))">35k → €1.803</button>
+        <button class="chip" onclick="document.getElementById('ral').value=50000;document.getElementById('ral').dispatchEvent(new Event('input'))">50k → €2.483</button>
+      </div>
+      <div class="grid3" style="grid-template-columns:1fr 1fr;margin-top:22px">
+        <div class="card"><div class="n">01 / 30 secondi</div><h3>Niente login</h3><p>Un numero, tre scelte. Il calcolo è istantaneo e resta nel tuo browser.</p></div>
+        <div class="card"><div class="n">02 / trasparente</div><h3>Ogni riga spiegata</h3><p>INPS, scaglioni 23/33/43%, detrazione, addizionali: vedi dove finisce ogni euro.</p></div>
+      </div>
+    </div>
+
+    <div class="busta" role="form" aria-label="calcolatore stipendio netto">
+      <div class="busta-head"><span>BUSTA STIMA · <span id="ver">…</span></span><span class="ok">● ricalcolo live</span></div>
+      <div class="busta-body">
+        <div class="field">
+          <label for="ral">RAL annua lorda (€)</label>
+          <div class="riga-in"><input id="ral" type="number" value="30000" min="0" max="150000" step="500" inputmode="numeric"></div>
+          <input id="ral-range" type="range" min="15000" max="100000" step="500" value="30000" aria-label="RAL slider">
+        </div>
+        <div class="field">
+          <label>Mensilità</label>
+          <div class="seg"><button data-mens="12">12</button><button data-mens="13" class="on">13 + tredicesima</button><button data-mens="14">14</button></div>
+        </div>
+        <div class="field">
+          <label for="regione">Regione (addizionale IRPEF, stima)</label>
+          <select id="regione"></select>
+        </div>
+        <div class="ticket">
+          <div class="mese-label">NETTO STIMATO · <span id="mens-label">13 mensilità</span></div>
+          <div id="mese">€ …</div>
+          <div class="sub2">netto annuo <span id="netto-annuo">…</span> · dove va la RAL:</div>
+          <div id="barra"></div>
+          <div id="legenda"></div>
+          <div id="righe"></div>
+          <div class="ticket-actions">
+            <button class="btn carta" id="cta-hero">PDF scenari · 9€</button>
+            <button class="linkbtn" id="copy">Copia link risultato</button>
+          </div>
+        </div>
+        <p style="font-size:12.5px;color:var(--ink2);margin:12px 2px 0">Stima su <b>tax-2026.json <span id="ver2"></span></b>. CCNL, cuneo del datore, detrazioni familiari e conguagli possono spostare il risultato. Verifica con busta paga e commercialista.</p>
+        <div style="margin-top:10px"><button class="btn ghost" id="cta" style="width:100%">Scarica PDF 1 pagina · 9€</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid3">
+    <div class="card"><div class="n">IRPEF 23/33/43</div><h3>Scaglioni 2026</h3><p>23% fino a 28.000€ di imponibile, 33% fino a 50.000€, 43% oltre. Detrazione lavoro dipendente fino a 1.955€ in fase transitoria.</p></div>
+    <div class="card"><div class="n">INPS 9,19%</div><h3>Contributi IVS</h3><p>Trattenuta 9,19% entro il massimale (55.000€ in bozza). Sopra il massimale, aliquota solo oltre soglia: verifica circolare INPS.</p></div>
+    <div class="card"><div class="n">+ ADDIZIONALI</div><h3>Regione + Comune</h3><p>Media 1,5% + 0,5% sull'imponibile. La tua regione sposta ±80€/anno: selezionala nel calcolatore.</p></div>
+  </div>
+
+  <div class="cta" id="pdf">
+    <div class="cta-l">
+      <div class="kicker" style="color:var(--rosso)">PDF · 1 pagina · per colloqui e CAF</div>
+      <h2>Porta i numeri al colloquio.</h2>
+      <ul>
+        <li>3 scenari: RAL −2.000 / base / +2.000 €</li>
+        <li>Dettaglio IRPEF · INPS · addizionali riga per riga</li>
+        <li>Checklist: 5 domande da fare prima di firmare</li>
+      </ul>
+      <div class="prezzo"><s>18€</s> lancio <b>9€</b> · IVA inclusa · fattura IT</div>
+    </div>
+    <div class="cta-r">
+      <a class="btn" id="stripe-link" href="https://buy.stripe.com/PLACEHOLDER_9EUR" target="_blank" rel="noopener">Compra con Stripe →</a>
+      <button class="linkbtn" id="cta-faq" onclick="document.getElementById('cta').click()" style="color:#fff">o leggi prima le FAQ ↓</button>
+      <div style="font-size:12.5px;opacity:.85">Pagamento sicuro Stripe · niente abbonamento · rimborso 14gg se i numeri sono sbagliati</div>
+    </div>
+  </div>
+
+  <div class="faq" id="faq">
+    <h2 style="font-family:var(--serif);font-size:30px">Domande vere, risposte oneste.</h2>
+    <details open><summary>Come si calcola lo stipendio netto 2026 dalla RAL?</summary><p>RAL − INPS 9,19%, poi IRPEF a scaglioni 23/33/43% meno detrazione art.13 TUIR, meno addizionali, diviso mensilità. Il calcolatore sopra esegue esattamente questa sequenza sulle aliquote bozza L.199/2025.</p></details>
+    <details><summary>È preciso come la mia busta paga?</summary><p>No — è una stima. CCNL, taglio cuneo applicato dal datore, figli a carico, addizionale comunale con esenzioni e conguagli di fine anno la spostano di decine di euro al mese. Usalo per confrontare offerte, non per contestare il cedolino.</p></details>
+    <details><summary>13ª e 14ª: cosa cambia?</summary><p>Solo il divisore: il netto annuo stimato resta uguale. Con 14 mensilità prendi meno al mese ma hai due rate extra (giugno + dicembre). Il selettore 12/13/14 ricalcola tutto live e aggiorna il link condivisibile.</p></details>
+    <details><summary>Quanto incide la regione?</summary><p>Su 30k RAL, passare da 1,23% a 1,73% sposta ~130€/anno. Il selettore usa stime da aliquote 2024-25: controlla la delibera 2026 della tua regione prima di firmare.</p></details>
+    <details><summary>Cosa contiene il PDF da 9€?</summary><p>Una pagina stampabile: 3 scenari RAL, tabella IRPEF/INPS/addizionali e checklist colloquio. Paghi una volta con Stripe, fattura italiana, niente abbonamento.</p></details>
+    <details><summary>I miei dati dove vanno?</summary><p>Da nessuna parte: calcolo 100% nel browser, nessun account, nessun invio. Misuriamo solo conteggi anonimi (Plausible) per capire se il tool serve davvero.</p></details>
+  </div>
+
+  <p class="metodo"><b>Metodo (verificabile):</b> imponibile = RAL − min(RAL, 55.000) × 9,19%. IRPEF lorda per scaglioni 28k/50k. Detrazione 1.955€ piena fino a 15k di imponibile, azzerata a 28k (lineare). Addizionali sull'imponibile. Netto annuo ÷ mensilità. Parametri in <code>tax-2026.json</code> — se un'aliquota cambia, cambia solo quel file e la versione nel banner.</p>
+
+  <footer>
+    <div>© 2026 Stipendio Netto · Stima a scopo informativo, non è consulenza fiscale né parere professionale. Fonti: Agenzia delle Entrate, INPS, L.199/2025 (bozza). Versione parametri: <code id="taxmeta2">…</code></div>
+    <div style="margin-top:8px">Prezzi: PDF scenari 9€ lancio (poi 12€) · Stripe · fattura IT · <a href="./success.html">success</a> · <a href="./cancel.html">cancel</a></div>
+  </footer>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="acquista PDF">
+  <div class="sheet">
+    <h3>PDF scenari · 1 pagina</h3>
+    <div style="font-size:14px;color:var(--ink2)">3 scenari RAL + dettaglio + checklist colloquio. Fattura IT, niente abbonamento.</div>
+    <div class="pr">9€ <span style="font-size:14px;color:var(--ink2)">lancio · poi 12€</span></div>
+    <button class="btn" id="buy">Paga con Stripe →</button>
+    <div style="margin-top:8px"><a class="btn ghost" id="stripe-link-2" href="https://buy.stripe.com/PLACEHOLDER_9EUR" target="_blank" rel="noopener" style="width:100%;text-align:center">Apri link pagamento</a></div>
+    <div class="mini">Pagamento sicuro Stripe · rimborso 14gg se i numeri sono sbagliati<br><button class="linkbtn" data-close="1" style="color:var(--ink2)">chiudi ✕</button></div>
+  </div>
+</div>
+
+<script src="./netto.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const v = document.getElementById('ver').textContent;
+  document.getElementById('ver2').textContent = v;
+  const t = document.getElementById('taxmeta').textContent;
+  document.getElementById('taxmeta2').textContent = t;
+});
+</script>
+</body>
+</html>

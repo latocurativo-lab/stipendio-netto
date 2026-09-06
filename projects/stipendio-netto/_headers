@@ -1,0 +1,9 @@
+/* Cloudflare Pages — cache + security headers (static, zero-dep) */
+/tax-2026.json
+  Cache-Control: public, max-age=3600
+  Content-Type: application/json; charset=utf-8
+/
+  Cache-Control: public, max-age=300
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin

@@ -1,0 +1,36 @@
+# Token-free fallback deploy: publishes projects/stipendio-netto to GitHub Pages on push.
+# Primary target remains Cloudflare Pages (see projects/stipendio-netto/README.md).
+# No secrets needed — uses automatic GITHUB_TOKEN.
+name: static-pages-fallback
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "projects/stipendio-netto/**"
+      - ".github/workflows/static-pages-fallback.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: projects/stipendio-netto
+      - id: deployment
+        uses: actions/deploy-pages@v4

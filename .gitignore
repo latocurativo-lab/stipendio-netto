@@ -146,6 +146,7 @@ memories/consensus.md.bak
 projects/*
 !projects/.gitkeep
 !projects/snapog/
+!projects/stipendio-netto/
 
 # Local/private outputs (do not publish)
 AGENTS.md
@@ -183,6 +184,9 @@ docs/*
 docs/*/*
 !docs/*/.gitkeep
 !docs/windows-setup.md
+!docs/devops/cycle4-launch.md
+!docs/operations/cycle4-hallway.md
+!docs/qa/cycle4-verify.md
 # Ignore all memories (keep folder marker only)
 memories/*
 !memories/.gitkeep

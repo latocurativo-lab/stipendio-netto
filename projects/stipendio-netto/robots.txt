@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://stipendio-netto.pages.dev/sitemap.xml
