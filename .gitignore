@@ -187,6 +187,7 @@ docs/*/*
 !docs/devops/cycle4-launch.md
 !docs/operations/cycle4-hallway.md
 !docs/qa/cycle4-verify.md
+!docs/devops/cycle5-live.md
 # Ignore all memories (keep folder marker only)
 memories/*
 !memories/.gitkeep
