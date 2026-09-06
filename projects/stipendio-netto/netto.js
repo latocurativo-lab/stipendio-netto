@@ -65,13 +65,68 @@ if (typeof window !== 'undefined') window.__calcPure = calcPure;
 const fmtEUR = (n, dec = 0) =>
   (Number(n) || 0).toLocaleString('it-IT', { minimumFractionDigits: dec, maximumFractionDigits: dec });
 
+/* Funnel fake-door v2 (zero-backend, privacy-first, QA-safe: calcPure invariato).
+ * - legacy `sn_events` mantenuto per compatibilità (Cycle 4 sheet).
+ * - `sn_funnel_v1`: { sessions:{sid:{first_seen,utm_source,utm_medium,utm_campaign,ref}}, counts:{calc,cta-click,pdf-intent,share}, ttv_ms:[...last 50] }
+ * - TTV = ms da window.__sn_t0 (head) al primo render del numero. Proxy strumentale
+ *   del TTV hallway (lettura ad alta voce); la misura umana resta nel protocollo.
+ */
+const SN_FUNNEL_KEY = 'sn_funnel_v1';
+
+function snSession() {
+  try {
+    let f = JSON.parse(localStorage.getItem(SN_FUNNEL_KEY) || '{}');
+    if (!f.sessions) f.sessions = {};
+    if (!f.counts) f.counts = {};
+    let sid = null;
+    try { sid = sessionStorage.getItem('sn_sid'); } catch (_) { sid = null; }
+    if (!sid || !f.sessions[sid]) {
+      sid = 's' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+      try { sessionStorage.setItem('sn_sid', sid); } catch (_) { /* no-op */ }
+      const q = new URLSearchParams(location.search);
+      f.sessions[sid] = {
+        first_seen: new Date().toISOString(),
+        utm_source: q.get('utm_source') || '',
+        utm_medium: q.get('utm_medium') || '',
+        utm_campaign: q.get('utm_campaign') || '',
+        ref: (document.referrer || '').slice(0, 120)
+      };
+      // cap sessions a 200 (localStorage hygiene)
+      const ids = Object.keys(f.sessions);
+      if (ids.length > 200) ids.slice(0, ids.length - 200).forEach(id => delete f.sessions[id]);
+      localStorage.setItem(SN_FUNNEL_KEY, JSON.stringify(f));
+    }
+    return { f, sid };
+  } catch (_) { return { f: null, sid: null }; }
+}
+
+function markTTV() {
+  try {
+    if (window.__sn_ttv_done) return;
+    window.__sn_ttv_done = true;
+    const t0 = window.__sn_t0 || Date.now();
+    const ms = Math.max(0, Date.now() - t0);
+    const { f } = snSession();
+    if (!f) return;
+    f.ttv_ms = (f.ttv_ms || []).concat([ms]).slice(-50);
+    localStorage.setItem(SN_FUNNEL_KEY, JSON.stringify(f));
+  } catch (_) { /* no-op */ }
+}
+
 function track(evt) {
   try {
     if (window.plausible) window.plausible(evt);
+    // legacy compat (Cycle 4 sheet legge sn_events)
     const k = 'sn_events';
     const log = JSON.parse(localStorage.getItem(k) || '{}');
     log[evt] = (log[evt] || 0) + 1;
     localStorage.setItem(k, JSON.stringify(log));
+    // funnel v2
+    const { f } = snSession();
+    if (f) {
+      f.counts[evt] = (f.counts[evt] || 0) + 1;
+      localStorage.setItem(SN_FUNNEL_KEY, JSON.stringify(f));
+    }
     if (evt === 'cta-click') {
       const c = JSON.parse(localStorage.getItem('sn_cta') || '{"n":0}');
       c.n += 1; c.last = new Date().toISOString();
@@ -93,6 +148,7 @@ function readInputs() {
 }
 
 function render(out) {
+  markTTV();
   const meseEl = document.getElementById('mese');
   meseEl.textContent = '€ ' + fmtEUR(out.mese, out.mese % 1 ? 2 : 0);
   document.getElementById('netto-annuo').textContent = '€ ' + fmtEUR(out.nettoAnnuo);

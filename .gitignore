@@ -188,6 +188,10 @@ docs/*/*
 !docs/operations/cycle4-hallway.md
 !docs/qa/cycle4-verify.md
 !docs/devops/cycle5-live.md
+!docs/operations/cycle6-hallway.md
+!docs/fullstack/cycle6-tracking.md
+!docs/qa/cycle6-verify.md
+!docs/devops/cycle6-deploy.md
 # Ignore all memories (keep folder marker only)
 memories/*
 !memories/.gitkeep

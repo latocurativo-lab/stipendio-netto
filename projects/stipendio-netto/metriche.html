@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Metriche hallway — interno (Stipendio Netto)</title>
+<style>
+:root{--carta:#FAF6EE;--ink:#191713;--ink2:#5B554A;--verde:#0E6B3A;--rosso:#C22E1F;--oro:#B98A1D;--linea:#E2D9C4;
+--mono:'IBM Plex Mono',ui-monospace,monospace;--serif:Georgia,serif;--sans:system-ui,sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--carta);color:var(--ink);font-family:var(--sans)}
+.wrap{max-width:900px;margin:0 auto;padding:24px 20px 60px}
+.banner{background:var(--ink);color:#F5EFE0;font-size:13px;text-align:center;padding:9px 12px}
+h1{font-family:var(--serif);font-size:32px;margin:14px 0 4px}
+.sub{color:var(--ink2);font-size:14.5px;max-width:70ch}
+.card{background:#FFFDF7;border:2px solid var(--ink);border-radius:12px;padding:18px;box-shadow:4px 4px 0 var(--ink);margin-top:18px}
+.card h2{font-family:var(--serif);margin:0 0 10px;font-size:22px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{border:1px solid var(--linea);padding:8px 10px;text-align:left}
+th{font-family:var(--mono);font-size:12px;background:#F3EDDF}
+td.num{font-family:var(--mono);font-weight:700}
+input,select,textarea{font-family:var(--sans);font-size:14px;padding:8px 10px;border:2px solid var(--ink);border-radius:8px;width:100%;background:#fff;color:var(--ink)}
+.btn{display:inline-block;border:2px solid var(--ink);border-radius:999px;padding:10px 20px;font-weight:600;font-size:15px;background:var(--verde);color:#fff;box-shadow:3px 3px 0 var(--ink);cursor:pointer}
+.btn.ghost{background:#fff;color:var(--ink)}
+.kpi{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
+.kpi div{flex:1;min-width:130px;background:#fff;border:2px solid var(--ink);border-radius:10px;padding:12px;text-align:center}
+.kpi b{font-family:var(--mono);font-size:26px;display:block}
+.kpi span{font-size:12px;color:var(--ink2)}
+.verdict{font-family:var(--mono);font-weight:700;font-size:18px;padding:10px 14px;border-radius:10px;display:inline-block;margin-top:8px}
+.ok{background:#DFF3E4;border:2px solid var(--verde)}
+.ko{background:#FBE3DF;border:2px solid var(--rosso)}
+.na{background:#F3EDDF;border:2px solid var(--ink2)}
+.mini{font-size:12.5px;color:var(--ink2)}
+</style>
+</head>
+<body>
+<div class="banner">🔒 STRUMENTO INTERNO — non linkare dal sito · noindex · dati solo in questo browser (localStorage)</div>
+<div class="wrap">
+  <h1>Metriche hallway · fake-door PDF</h1>
+  <p class="sub">Legge <code>sn_funnel_v1</code> + <code>sn_events</code> di questo browser (stesso dispositivo del test).
+  Per le 100 visite con Plausible/esterno: confronta questi conteggi locali con l'analytics server quando attiva.
+  Soglie (Cycle 4): <b>KILL PDF</b> se CTR CTA &lt;15% su n≥100 visite o conv &lt;1.5% dopo 500 visite · <b>GO</b> se CTR ≥15% e conv ≥1.5%.</p>
+
+  <div class="card"><h2>1 · Funnel automatico</h2>
+    <div class="kpi" id="kpi"></div>
+    <p class="mini" id="sess"></p>
+    <p><span class="verdict na" id="verdict">n insufficiente</span></p>
+    <p class="mini">CTR CTA = cta-click / calc · Intent = pdf-intent / cta-click · TTV mediano strumentale (ms al primo numero).</p>
+  </div>
+
+  <div class="card"><h2>2 · Tally manuale — 5 utenti hallway</h2>
+    <p class="mini">Protocollo: <code>docs/operations/cycle4-hallway.md</code>. Task: «offerta 30.000€ RAL, 13 mensilità: quanto al mese?».</p>
+    <table><thead><tr><th>#</th><th>TTV (s, lettura ad alta voce)</th><th>«È preciso come busta paga?» → No/stima? (sì/no)</th><th>Intento PDF 9€? (sì/no/perché)</th><th>Confusioni (mensilità/regione/detrazione)</th></tr></thead>
+    <tbody id="tally"></tbody></table>
+    <p style="margin-top:10px"><button class="btn ghost" id="save">Salva tally</button>
+    <button class="btn ghost" id="export">Esporta JSON ↓</button></p>
+  </div>
+
+  <div class="card"><h2>3 · Sessioni (UTM/ref)</h2>
+    <table><thead><tr><th>sessione</th><th>prima vista</th><th>utm_source</th><th>utm_medium</th><th>utm_campaign</th><th>ref</th></tr></thead>
+    <tbody id="sesstab"></tbody></table>
+  </div>
+  <p><a href="./">← Torna al calcolatore</a></p>
+</div>
+<script>
+(function(){
+  var F={}, E={};
+  try{ F=JSON.parse(localStorage.getItem('sn_funnel_v1')||'{}'); }catch(_){}
+  try{ E=JSON.parse(localStorage.getItem('sn_events')||'{}'); }catch(_){}
+  var c=(F.counts||{});
+  var calc=c.calc||E.calc||0, cta=c['cta-click']||E['cta-click']||0,
+      intent=c['pdf-intent']||E['pdf-intent']||0, share=c.share||E.share||0;
+  var ttv=(F.ttv_ms||[]).slice().sort(function(a,b){return a-b;});
+  var med=ttv.length?ttv[Math.floor(ttv.length/2)]:null;
+  var ctr=calc>0?cta/calc*100:0;
+  function kpi(v,l){return '<div><b>'+v+'</b><span>'+l+'</span></div>';}
+  document.getElementById('kpi').innerHTML =
+    kpi(calc,'calc')+kpi(cta,'cta-click')+kpi(intent,'pdf-intent')+kpi(share,'share')+
+    kpi(ctr.toFixed(1)+'%','CTR CTA')+(med===null?kpi('—','TTV med.'):kpi((med/1000).toFixed(1)+'s','TTV med.'));
+  var ns=Object.keys(F.sessions||{}).length;
+  document.getElementById('sess').textContent='Sessioni distinte (questo browser): '+ns+' · visite reali multi-utente richiedono analytics server (Plausible) — vedi Next Action in consensus.';
+  var v=document.getElementById('verdict');
+  if(calc>=100){ var go=ctr>=15; v.textContent=go?'GO (CTR ≥15% su n≥100)':'KILL PDF → tool gratis (CTR <15%)'; v.className='verdict '+(go?'ok':'ko'); }
+  else { v.textContent='n insufficiente ('+calc+'/100 visite)'; v.className='verdict na'; }
+  // tally manuale
+  var T=[]; try{ T=JSON.parse(localStorage.getItem('sn_hallway_manual')||'[]'); }catch(_){}
+  while(T.length<5) T.push({ttv:'',stima:'',pdf:'',conf:''});
+  var tb=document.getElementById('tally');
+  tb.innerHTML=T.slice(0,5).map(function(r,i){
+    return '<tr><td class="num">'+(i+1)+'</td>'+
+    '<td><input data-i="'+i+'" data-k="ttv" value="'+(r.ttv||'').replace(/"/g,'&quot;')+'" placeholder="es. 22"></td>'+
+    '<td><select data-i="'+i+'" data-k="stima"><option value="">—</option>'+['sì','no'].map(function(o){return '<option'+(r.stima===o?' selected':'')+'>'+o+'</option>'}).join('')+'</select></td>'+
+    '<td><input data-i="'+i+'" data-k="pdf" value="'+(r.pdf||'').replace(/"/g,'&quot;')+'" placeholder="sì/no + perché"></td>'+
+    '<td><input data-i="'+i+'" data-k="conf" value="'+(r.conf||'').replace(/"/g,'&quot;')+'" placeholder="…"></td></tr>';
+  }).join('');
+  document.getElementById('save').onclick=function(){
+    var rows=[...tb.querySelectorAll('[data-i]')].reduce(function(a,el){a[el.dataset.i]=a[el.dataset.i]||{};a[el.dataset.i][el.dataset.k]=el.value;return a;},[]);
+    localStorage.setItem('sn_hallway_manual',JSON.stringify(rows));
+    document.getElementById('save').textContent='Salvato ✓';setTimeout(function(){document.getElementById('save').textContent='Salva tally';},1500);
+  };
+  document.getElementById('export').onclick=function(){
+    var blob=new Blob([JSON.stringify({funnel:F,legacy:E,manual:T},null,2)],{type:'application/json'});
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='hallway-export.json';a.click();
+  };
+  var st=document.getElementById('sesstab');
+  var ids=Object.keys(F.sessions||{});
+  st.innerHTML=ids.length?ids.map(function(id){var s=F.sessions[id];
+    return '<tr><td class="num">'+id+'</td><td>'+(s.first_seen||'')+'</td><td>'+(s.utm_source||'—')+'</td><td>'+(s.utm_medium||'—')+'</td><td>'+(s.utm_campaign||'—')+'</td><td>'+(s.ref||'—')+'</td></tr>';
+  }).join(''):'<tr><td colspan="6" class="mini">nessuna sessione registrata in questo browser</td></tr>';
+})();
+</script>
+</body>
+</html>

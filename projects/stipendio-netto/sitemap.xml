@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://stipendio-netto.pages.dev/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://stipendio-netto.pages.dev/success.html</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
-  <url><loc>https://stipendio-netto.pages.dev/cancel.html</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
+  <url><loc>https://latocurativo-lab.github.io/stipendio-netto/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://latocurativo-lab.github.io/stipendio-netto/success.html</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
+  <url><loc>https://latocurativo-lab.github.io/stipendio-netto/cancel.html</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
 </urlset>
