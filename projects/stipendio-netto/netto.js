@@ -30,19 +30,22 @@ function detrazioneLavoroDip(imponibile, d) {
   // JSON ha ancora forma legacy {max,phase_out_start,phase_out_end} usa lineare.
   if (d && d.fascia_15_28) {
     const r = Math.max(0, Number(imponibile) || 0);
-    if (r <= 15000) return d.fino_15k;
-    if (r <= 28000) {
+    let out;
+    if (r <= 15000) out = d.fino_15k;
+    else if (r <= 28000) {
       const f = d.fascia_15_28;
-      return Math.round(f.base + f.extra * (f.high - r) / (f.high - f.low));
-    }
-    if (r < 50000) {
+      out = Math.round(f.base + f.extra * (f.high - r) / (f.high - f.low));
+    } else if (r < 50000) {
       const f = d.fascia_28_50;
-      let out = Math.round(f.base * (f.high - r) / (f.high - f.low));
-      const b = d.bonus_65;
-      if (b && r >= b.low && r <= b.high) out += b.importo;
-      return out;
+      out = Math.round(f.base * (f.high - r) / (f.high - f.low));
+    } else {
+      return 0;
     }
-    return 0;
+    // Bonus +65 art.13 c.1-bis: spetta per RC 25-35k in QUALSIASI fascia
+    // (prima era solo nel ramo 28-50k: bug trovato da QA indipendente).
+    const b = d.bonus_65;
+    if (b && r >= b.low && r <= b.high) out += b.importo;
+    return out;
   }
   if (imponibile <= d.phase_out_start) return d.max;
   if (imponibile >= d.phase_out_end) return 0;
